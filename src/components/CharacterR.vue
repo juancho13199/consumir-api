@@ -9,7 +9,7 @@
 
           <div class="card-content">
             <h3 class="title is-size-4">{{caracter.name}}</h3>
-            <button class="button is-success is-rounded is-small">
+            <button class="button is-success is-rounded is-small" @click="showMore(caracter.id)">
               Ver más
             </button>
     
@@ -22,7 +22,12 @@
 <script>
 export default {
 //Importamos el caracter del ciclo for de la app principal
-props:['caracter']
+props:['caracter'] ,
+methods:{
+  showMore(id){
+    this.$emit('showModal',id);
+  }
+}
 }
 </script>
 

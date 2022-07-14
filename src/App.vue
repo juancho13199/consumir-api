@@ -32,6 +32,7 @@
     <!--Tarjeta -->
   <div class="columns is-desktop is-mobile is-tablet is-multiline is-centered">
     <CharacterR 
+    @showModal="showModal"
     v-for="caracter of characters" 
     :key="caracter.id" 
     :caracter="caracter"/>
@@ -48,7 +49,34 @@
   </nav>
 </div>
   
+<div class="modal"
+  :class="{ 'is-active': modal}"
+  v-if="modal">
+  <div class="modal-backgorund" @click="modal=false;">
+    <div class="modal-card">
 
+      <header class="modal-card-head">
+      <p class="modal-card-title">Acerda de: {{currentCaracter.name}}</p>
+      </header>
+
+      <div class="modal-card-body">
+      <strong><p>Genero:</p></strong>
+      <p>{{currentCaracter.gender}}</p>
+       <strong><p>Estatus:</p></strong>
+      <p>{{currentCaracter.status}}</p>
+       <strong><p>Especie:</p></strong>
+      <p>{{currentCaracter.species}}</p>
+       <strong><p>Tipo:</p></strong>
+      <p>{{currentCaracter.type}}</p>
+      </div>
+      
+      <footer class="modal-card-food">
+        <button class="button">Cerrar</button>
+      </footer>
+
+    </div>
+  </div>
+</div>
   
 </template>
 
@@ -63,6 +91,8 @@ export default {
       page:1,
       pages:1,
       search:'',
+      modal:false,
+      currentCaracter:{}
     }
   },
   created(){
@@ -94,10 +124,26 @@ export default {
     changuePage(page){
       this.page=(page <=0 || page > this.pages) ? this.page:page
       this.fetch();
+      //Scroll top
+      window.scrollTo(0,0);
     },
     searchData(){
       this.page=1
       this.fetch();
+    },
+    showModal(id){
+      //id
+      this.fetchOne(id);
+      //fetchOne
+    },
+    async fetchOne(id){
+      //llamado HTTP
+      let result= await axios.get(`https://rickandmortyapi.com/api/character/${id}/`);
+      this.currentCaracter=result.data;
+      this.modal= true;
+
+      console.log(this.currentCaracter,"Personaje");
+
     }
   }
 }
